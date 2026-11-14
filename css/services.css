@@ -1,0 +1,386 @@
+/* ==========================================================================
+   PRIMEFACTOR.APP — SERVICES & FACILITIES MODERN ECOSYSTEM HUB
+   Glassmorphic Cyber-Olympiad UI, Interactive Filters & Status Telemetry
+   ========================================================================== */
+
+/* Header controls wrapper */
+.services-controls-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+@media (min-width: 860px) {
+  .services-controls-bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+/* Category Filter Tabs */
+.services-filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.filter-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 9999px;
+  color: #94A3B8;
+  font-family: var(--font-heading, inherit);
+  font-size: 0.825rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+}
+
+.filter-tab-btn:hover {
+  color: #F8FAFC;
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-1px);
+}
+
+.filter-tab-btn.active {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.25) 0%, rgba(2, 132, 199, 0.35) 100%);
+  border-color: #38BDF8;
+  color: #38BDF8;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+}
+
+.filter-tab-btn .tab-count {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 9999px;
+  font-size: 0.725rem;
+  color: inherit;
+  border: 1px solid currentColor;
+}
+
+/* Search Input Box */
+.services-search-wrap {
+  position: relative;
+  min-width: 280px;
+  max-width: 100%;
+}
+
+.services-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem 2.5rem 0.65rem 2.5rem;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 9999px;
+  color: #F8FAFC;
+  font-family: inherit;
+  font-size: 0.85rem;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.services-search-input:focus {
+  border-color: #38BDF8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
+  background: rgba(15, 23, 42, 0.98);
+}
+
+.services-search-input::placeholder {
+  color: #64748B;
+}
+
+.services-search-icon {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748B;
+  pointer-events: none;
+}
+
+.services-search-clear {
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #64748B;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: none;
+  padding: 0.2rem;
+  line-height: 1;
+}
+
+.services-search-clear:hover {
+  color: #F8FAFC;
+}
+
+/* Sub-bar showing active count */
+.services-stats-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  color: #94A3B8;
+  padding: 0 0.5rem;
+}
+
+.services-active-count {
+  font-weight: 600;
+  color: #38BDF8;
+}
+
+/* Enhanced 15 Facilities Grid */
+.services-facilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.75rem;
+  width: 100%;
+}
+
+/* Modern Card Styling */
+.service-facility-card {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(56, 189, 248, 0.15) !important;
+  border-radius: 1.25rem !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+              box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+              border-color 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+}
+
+.service-facility-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(56, 189, 248, 0.5) !important;
+  box-shadow: 0 16px 35px -8px rgba(14, 165, 233, 0.3), 0 0 20px rgba(56, 189, 248, 0.15);
+}
+
+.service-card-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  background: #0B1120;
+}
+
+.service-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.65 !important;
+  filter: saturate(1.1) contrast(1.1);
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.service-facility-card:hover .service-card-img {
+  transform: scale(1.05);
+  opacity: 0.85 !important;
+}
+
+/* Facility Badge & Status Pill inside image */
+.service-card-header-meta {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  right: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+}
+
+.service-card-badge {
+  position: static !important;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38BDF8;
+  font-size: 0.725rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.service-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(8px);
+}
+
+.status-cloud {
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+.status-cloud .status-dot {
+  background: #38BDF8;
+  box-shadow: 0 0 6px #38BDF8;
+}
+
+.status-security {
+  color: #34D399;
+  border: 1px solid rgba(52, 211, 153, 0.4);
+}
+.status-security .status-dot {
+  background: #34D399;
+  box-shadow: 0 0 6px #34D399;
+}
+
+.status-core {
+  color: #A78BFA;
+  border: 1px solid rgba(167, 139, 250, 0.4);
+}
+.status-core .status-dot {
+  background: #A78BFA;
+  box-shadow: 0 0 6px #A78BFA;
+}
+
+.status-progression {
+  color: #FBBF24;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+.status-progression .status-dot {
+  background: #FBBF24;
+  box-shadow: 0 0 6px #FBBF24;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Card Body */
+.service-card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.service-card-kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #38BDF8;
+  margin-bottom: 0.35rem;
+}
+
+.service-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #F8FAFC;
+  margin: 0 0 0.65rem 0;
+  line-height: 1.3;
+}
+
+.service-card-desc {
+  font-size: 0.875rem;
+  color: #94A3B8;
+  line-height: 1.55;
+  margin-bottom: 1.15rem;
+  text-align: left !important;
+}
+
+.service-card-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  flex: 1;
+}
+
+.service-card-features li {
+  font-size: 0.8rem;
+  color: #CBD5E1;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  line-height: 1.4;
+}
+
+.service-card-features li::before {
+  content: "▹";
+  color: #38BDF8;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+/* Card Action Button */
+.service-card-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem 1rem;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 0.75rem;
+  color: #F8FAFC;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.service-card-action:hover {
+  background: rgba(14, 165, 233, 0.2);
+  border-color: #38BDF8;
+  color: #38BDF8;
+  transform: translateX(2px);
+}
+
+/* Empty search state */
+.services-empty-state {
+  display: none;
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px dashed rgba(148, 163, 184, 0.2);
+  border-radius: 1.25rem;
+  color: #94A3B8;
+}
+
+.services-empty-state h3 {
+  color: #F8FAFC;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}

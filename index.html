@@ -1,0 +1,2706 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      PrimeFactor.app — Olympiad Prime Factorization Speed Laboratory
+    </title>
+
+    <meta
+      name="description"
+      content="Interactive Math Olympiad prime factorization speed laboratory and training arena with real-time Pollard's Rho engine and Firebase ELO rating system."
+    />
+    <meta
+      name="keywords"
+      content="free open source prime factor web-app, math olympiad candidates, prime factorization decomposition, prime factorization practice, math olympiad rating system, number theory decomposition training"
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://rayaantasnim.github.io/Prime-Factorization-Web/" />
+
+    <meta
+      property="og:title"
+      content="PrimeFactor.app — Olympiad Prime Factorization Speed Laboratory"
+    />
+    <meta
+      property="og:description"
+      content="Interactive Math Olympiad prime factorization speed laboratory and training arena with real-time Pollard's Rho engine and Firebase ELO rating system."
+    />
+    <meta property="author" content="Rayaan Tasnim" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/index-media-query.css" />
+    <link rel="stylesheet" href="css/version-launch.css" />
+    <link rel="stylesheet" href="css/hero-fx.css" />
+
+    <!-- Hide hero copy until the GSAP intro is ready (removed by js/hero-fx.js; 3.5s safety net) -->
+    <script>
+      (function () {
+        try {
+          document.documentElement.classList.add('fx-pending');
+          setTimeout(function () { document.documentElement.classList.remove('fx-pending'); }, 3500);
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- GSAP with ScrollToPlugin for smooth spatial animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Three.js (WebGL) for the hero constellation; hero-fx.js falls back to raw WebGL without it -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="./css/ux-core.css" />
+    <script type="module" src="./js/ux-core.js"></script>
+  </head>
+  <body>
+    <!-- Full-Viewport Hardware Accelerated GSAP Flash Overlay -->
+    <div id="flash-overlay" aria-hidden="true"></div>
+
+    <!-- Persistent Global Top Header with Dropdown Navigation & Auth Controls -->
+    <header class="fixed-header">
+      <div class="header-container">
+        <!-- Left: Minimalist Logo + Brand Text -->
+        <a href="./index.html" class="brand-lockup">
+          <span class="brand-symbol">Π</span>
+          <span class="brand-text" style="color: white"
+            >Prime Factor<span class="dot-app">.app</span></span
+          >
+        </a>
+
+        <!-- Center: Hamburger Dropdown Trigger & Floating Frosted Glass Menu -->
+        <div style="position: relative">
+          <button
+            id="menu-toggle"
+            class="nav-hamburger-btn nav-dropdown-trigger"
+            aria-label="Toggle Navigation Menu"
+            aria-expanded="false"
+          >
+            <div class="hamburger-bars">
+              <span class="hamburger-bar"></span>
+              <span class="hamburger-bar"></span>
+              <span class="hamburger-bar"></span>
+            </div>
+            <span>Navigation</span>
+          </button>
+
+          <!-- Dropdown Box (Frosted Glass Navigation Links) -->
+          <nav
+            id="global-dropdown-menu"
+            class="nav-dropdown-glass-container global-nav-dropdown"
+            aria-label="Main Navigation"
+          >
+            <a
+              href="./index.html"
+              class="dropdown-link-item"
+              style="
+                background: rgba(14, 165, 233, 0.15);
+                border-left: 3px solid #38bdf8;
+              "
+            >
+              <div class="dropdown-link-content">
+                <svg
+                  class="link-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+                  ></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span>Home Page</span>
+              </div>
+              <span
+                class="dropdown-badge"
+                style="background: #0284c7; color: #ffffff"
+                >Hub</span
+              >
+            </a>
+
+            <a href="./ranges.html" class="dropdown-link-item">
+              <div class="dropdown-link-content">
+                <svg
+                  class="link-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Range Hub</span>
+              </div>
+              <span class="dropdown-badge">Tiers</span>
+            </a>
+
+            <a href="./contest.html" class="dropdown-link-item">
+              <div class="dropdown-link-content">
+                <svg
+                  class="link-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                  <path d="M4 22h16"></path>
+                  <path d="M10 14.66V17c0 .55-.45 1-1 1H7.5"></path>
+                  <path d="M14 14.66V17c0 .55.45 1 1 1h1.5"></path>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                </svg>
+                <span>Contest Arena</span>
+              </div>
+              <span
+                class="dropdown-badge"
+                style="background: #0284c7; color: #ffffff"
+                >Arena</span
+              >
+            </a>
+
+            <a
+              href="./profile.html"
+              id="dropdown-profile"
+              class="dropdown-link-item"
+            >
+              <div class="dropdown-link-content">
+                <svg
+                  class="link-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Profile</span>
+              </div>
+              <span class="dropdown-badge">Overview</span>
+            </a>
+
+            <a href="./medals.html" class="dropdown-link-item">
+              <div class="dropdown-link-content">
+                <svg
+                  class="link-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="8" r="6"></circle>
+                  <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+                </svg>
+                <span>Medals &amp; Badges</span>
+              </div>
+              <span class="dropdown-badge">Vault</span>
+            </a>
+
+            <a href="./rules.html" class="dropdown-link-item">
+              <div class="dropdown-link-content">
+                <svg
+                  class="link-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                  ></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span>Rules</span>
+              </div>
+              <span class="dropdown-badge">Policies</span>
+            </a>
+
+            <a href="./rating.html" class="dropdown-link-item">
+              <div class="dropdown-link-content">
+                <svg
+                  class="link-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <span>Rating</span>
+              </div>
+              <span class="dropdown-badge">Matrix</span>
+            </a>
+
+            <a href="./edu.html" class="dropdown-link-item">
+              <div class="dropdown-link-content">
+                <svg
+                  class="link-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"
+                  ></path>
+                  <path d="M6 6h10"></path>
+                  <path d="M6 10h10"></path>
+                </svg>
+                <span>Edu</span>
+              </div>
+              <span class="dropdown-badge">Training</span>
+            </a>
+
+            <a
+              href="./notifications.html"
+              class="dropdown-link-item"
+              id="dropdown-notification-trigger"
+            >
+              <div class="dropdown-link-content">
+                <svg
+                  class="link-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span style="font-family: var(--font-heading); color: #ffffff"
+                  >Notification</span
+                >
+                <span
+                  id="notif-row-unread-dot"
+                  class="subpixel-unread-dot"
+                  style="
+                    display: none;
+                    background: #dc2626;
+                    box-shadow: 0 0 10px #ef4444;
+                    border-radius: 50%;
+                    width: 8px;
+                    height: 8px;
+                    margin-left: 8px;
+                    vertical-align: middle;
+                  "
+                ></span>
+              </div>
+              <span
+                class="dropdown-badge"
+                style="background: rgba(14, 165, 233, 0.2); color: #38bdf8"
+                >Logs</span
+              >
+            </a>
+
+            <a href="./faq.html" class="dropdown-link-item" id="dropdown-faq">
+              <div class="dropdown-link-content">
+                <svg
+                  class="link-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"
+                  ></path>
+                  <path d="M6 6h10"></path>
+                  <circle cx="12" cy="14" r="1"></circle>
+                  <path d="M12 10a2 2 0 0 1 2 2c0 1-2 2-2 2"></path>
+                </svg>
+                <span>FAQ</span>
+              </div>
+              <span class="dropdown-badge">Archive</span>
+            </a>
+
+            <a href="./profile-settings.html" class="dropdown-link-item">
+              <div class="dropdown-link-content">
+                <svg
+                  class="link-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+                  ></path>
+                </svg>
+                <span>Settings</span>
+              </div>
+              <span class="dropdown-badge">Options</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Right: Auth Slot & Standalone Settings Trigger -->
+        <div class="header-actions">
+          <!-- Injected and managed by js/header.js (Google Sign-In or User Avatar + Sign Out) -->
+          <div id="header-auth-slot" class="header-auth-slot"></div>
+
+          <button
+            id="settings-toggle-btn"
+            class="icon-btn"
+            aria-label="Global Engine Settings"
+          >
+            <svg
+              class="gear-icon"
+              width="18"
+              height="18"
+              viewBox="0 0 512 512"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8-74.9-8-111.6 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L86.1 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L64.6 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8 74.9 8 111.6 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Floating Left Menu Trigger (Quick Page Navigation) -->
+    <button
+      id="floating-menu-trigger"
+      class="floating-menu-trigger"
+      aria-label="Open Section Map Matrix"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <span>Map Matrix</span>
+    </button>
+
+    <!-- Fullscreen Scrolling Map Overlay -->
+    <div
+      id="fullscreen-nav-overlay"
+      class="fullscreen-nav-overlay"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="overlay-header">
+        <h3 class="overlay-title">Navigation Topology</h3>
+        <button
+          id="close-nav-overlay-btn"
+          class="overlay-close-btn"
+          aria-label="Close Navigation Overlay"
+        >
+          ✕
+        </button>
+      </div>
+      <div class="overlay-nav-grid">
+        <div class="overlay-nav-card" data-target="sec-hero">
+          <span class="overlay-card-num">01</span>
+          <div class="overlay-card-info">
+            <h4>The Hero Gateway</h4>
+            <p>Olympiad entrance &amp; instant gameplay</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="sec-mini-challenge">
+          <span class="overlay-card-num">02</span>
+          <div class="overlay-card-info">
+            <h4>Playable Mini-Challenge</h4>
+            <p>Try live Pollard's Rho decomposition</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="sec-how-it-works">
+          <span class="overlay-card-num">03</span>
+          <div class="overlay-card-info">
+            <h4>How It Works</h4>
+            <p>3-step visual guide to Olympiad mastery</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="sec-verdict">
+          <span class="overlay-card-num">04</span>
+          <div class="overlay-card-info">
+            <h4>The 6 Ranks of Verdict</h4>
+            <p>Performance tiers and mathematical benchmarks</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="sec-elo-matrix">
+          <span class="overlay-card-num">05</span>
+          <div class="overlay-card-info">
+            <h4>The 12 Ranks of ELO</h4>
+            <p>Official 12-tier rating ladder (500 to 3000+)</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="sec-contract">
+          <span class="overlay-card-num">06</span>
+          <div class="overlay-card-info">
+            <h4>The 12-Point Scoring Matrix</h4>
+            <p>Scoring protocols, hint penalties, and 3-strike risk</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="sec-randomizer">
+          <span class="overlay-card-num">07</span>
+          <div class="overlay-card-info">
+            <h4>Instant Randomizer</h4>
+            <p>Rolling slot machine dynamic launch card</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="sec-ranges">
+          <span class="overlay-card-num">08</span>
+          <div class="overlay-card-info">
+            <h4>The Range Portal</h4>
+            <p>Standard competition tiers (1–200 to 50,000+)</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="sec-settings">
+          <span class="overlay-card-num">09</span>
+          <div class="overlay-card-info">
+            <h4>Cloud Profile &amp; Settings</h4>
+            <p>Direct rule switches &amp; Firestore identity sync</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="sec-ledger">
+          <span class="overlay-card-num">10</span>
+          <div class="overlay-card-info">
+            <h4>Personal Record &amp; Streaks</h4>
+            <p>Live ELO, best streaks, and win tallies</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="playground-section">
+          <span class="overlay-card-num">11</span>
+          <div class="overlay-card-info">
+            <h4>Prime Playground</h4>
+            <p>Live casual Pollard's Rho sandbox</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="sec-strategy">
+          <span class="overlay-card-num">12</span>
+          <div class="overlay-card-info">
+            <h4>Olympiad Strategy</h4>
+            <p>Mental shortcuts &amp; modular divisibility heuristics</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="sec-v4-announcement">
+          <span class="overlay-card-num">13</span>
+          <div class="overlay-card-info">
+            <h4>Version 4.0 Evolution</h4>
+            <p>Computational roadmap and protocol staging</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="sec-authenticity">
+          <span class="overlay-card-num">14</span>
+          <div class="overlay-card-info">
+            <h4>Platform Authenticity</h4>
+            <p>Hermetic engine with Cloud Firestore security</p>
+          </div>
+        </div>
+        <div class="overlay-nav-card" data-target="sec-gateway">
+          <span class="overlay-card-num">15</span>
+          <div class="overlay-card-info">
+            <h4>The Ultimate Gateway</h4>
+            <p>Final launch terminal and arena routing</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Settings Modal Slot -->
+    <div id="settings-modal-slot"></div>
+
+    <!-- Main Presentation Matrix -->
+    <main class="main-wrapper">
+      <!-- 1. IMPACTFUL HERO SECTION AT THE TOP (Item 2) -->
+      <section id="sec-hero" class="home-section hero-gateway">
+        <div class="section-bg-image-wrap">
+          <img
+            class="section-bg-image"
+            src="https://images.pexels.com/photos/39191009/pexels-photo-39191009.jpeg"
+            alt="Geometric abstract architecture"
+            loading="lazy"
+            style="opacity: 0.85"
+          />
+          <div class="section-bg-overlay"></div>
+        </div>
+        <span class="hero-scroll-cue" aria-hidden="true"></span>
+
+        <div class="content-container hero-content text-center">
+          <!-- Meta kicker badge -->
+          <div class="hero-badge-meta">
+            <span>⚡ Math Olympiad Competitive Laboratory</span>
+            <span aria-hidden="true">·</span>
+            <span>Cloud Firestore Verified</span>
+            <span aria-hidden="true">·</span>
+            <span>12 ELO Tiers</span>
+          </div>
+
+          <!-- Crystal-Clear Value Proposition Headline -->
+          <h1 class="hero-title">
+            Master Prime Factorization<br />
+            <span
+              class="highlight"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  #38bdf8 0%,
+                  #818cf8 50%,
+                  #34d399 100%
+                );
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+              "
+              >at Olympiad Speed.</span
+            >
+          </h1>
+
+          <p class="hero-subtitle">
+            An elite speed-mathematics training arena for Olympiad contestants.
+            Decompose complex composite numbers against ruthless countdown
+            clocks, climb the 12-Tier ELO ladder, and permanently secure medals
+            in Cloud Firestore.
+          </p>
+
+          <!-- Primary Action Callouts -->
+          <div class="hero-actions">
+            <a href="./ranges.html" class="hero-btn-primary">
+              <span>Start Playing</span>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </a>
+
+            <!-- Dynamic Auth Button (Syncs with Firebase after waitForAuthReady) -->
+            <button type="button" id="hero-auth-cta-btn" class="hero-btn-auth">
+              <span>Checking Session...</span>
+            </button>
+
+            <a href="./contest.html" class="hero-btn-secondary">
+              <span>Sudden Death Arena</span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polygon
+                  points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"
+                ></polygon>
+              </svg>
+            </a>
+          </div>
+
+          <!-- 2. INTERACTIVE MINI-CHALLENGE WIDGET (Item 3) -->
+          <div
+            id="sec-mini-challenge"
+            class="mini-challenge-card"
+            aria-label="Interactive Sample Challenge"
+          >
+            <div class="mini-card-head">
+              <div class="mini-card-title">
+                <span>⚡ Try a Quick Sample</span>
+                <span class="mini-card-pill">Playable Live</span>
+              </div>
+              <div class="text-sm text-slate-400" style="color: white">
+                Factorize into canonical prime powers
+              </div>
+            </div>
+
+            <!-- Target Number Stage -->
+            <div class="mini-target-stage">
+              <span class="mini-target-label">TARGET NUMBER:</span>
+              <div id="mini-target-num" class="mini-target-number">360</div>
+              <button
+                type="button"
+                id="mini-new-num-btn"
+                class="mini-target-refresh"
+              >
+                🔄 New Target
+              </button>
+            </div>
+
+            <!-- Quick Tap Prime Pills -->
+            <div
+              class="mini-prime-pill-strip"
+              aria-label="Quick Prime Factor Selectors"
+            >
+              <span
+                style="font-size: 0.8rem; color: #94a3b8; margin-right: 0.25rem"
+                >Tap primes:</span
+              >
+              <button type="button" class="mini-prime-pill" data-prime="2">
+                + 2
+              </button>
+              <button type="button" class="mini-prime-pill" data-prime="3">
+                + 3
+              </button>
+              <button type="button" class="mini-prime-pill" data-prime="5">
+                + 5
+              </button>
+              <button type="button" class="mini-prime-pill" data-prime="7">
+                + 7
+              </button>
+              <button type="button" class="mini-prime-pill" data-prime="11">
+                + 11
+              </button>
+              <button type="button" class="mini-prime-pill" data-prime="13">
+                + 13
+              </button>
+            </div>
+
+            <!-- Expression Input & Action Controls -->
+            <div class="mini-input-group">
+              <input
+                id="mini-challenge-input"
+                class="mini-expr-input"
+                type="text"
+                placeholder="e.g. 2^3 * 3^2 * 5 or 2*2*2*3*3*5"
+                autocomplete="off"
+                spellcheck="false"
+                aria-label="Factorization expression input"
+              />
+              <button type="button" id="mini-clear-btn" class="mini-clear-btn">
+                Clear
+              </button>
+              <button
+                type="button"
+                id="mini-submit-btn"
+                class="mini-submit-btn"
+              >
+                Check Answer ↵
+              </button>
+            </div>
+
+            <!-- Live Product Metric -->
+            <div class="mini-feedback-row">
+              <div>
+                <span>Current Product: </span>
+                <strong
+                  id="mini-current-product"
+                  class="font-mono text-cyan-400"
+                  >1</strong
+                >
+              </div>
+              <div style="font-size: 0.78rem; color: #64748b">
+                Accepts <code>2^3 * 3^2 * 5</code> or repeated factors
+              </div>
+            </div>
+
+            <!-- Instant Feedback / Verdict Alert Banner -->
+            <div
+              id="mini-verdict-banner"
+              class="mini-verdict-banner"
+              style="display: none"
+              role="status"
+            ></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. 3-STEP "HOW IT WORKS" VISUAL GUIDE (Item 4) -->
+      <section
+        id="sec-how-it-works"
+        class="home-section"
+        style="padding-top: 2rem; padding-bottom: 2rem"
+      >
+        <div class="content-container">
+          <div class="section-head text-center">
+            <span class="section-kicker">Tournament Architecture</span>
+            <h2 class="section-title">How PrimeFactor.app Works</h2>
+            <p class="section-desc">
+              A three-step competitive pathway engineered to transition
+              contestants from basic mental arithmetic to high-velocity Math
+              Olympiad factorization mastery.
+            </p>
+          </div>
+
+          <div class="how-it-works-grid">
+            <!-- Step 1 -->
+            <div class="step-card">
+              <div>
+                <div class="step-header">
+                  <span class="step-num step-num-1">01</span>
+                  <span class="step-icon">🔑</span>
+                </div>
+                <h3 class="step-title">Sign In &amp; Initialize at 500 ELO</h3>
+                <p class="step-desc">
+                  Authenticate seamlessly via Google Sign-In. Your official
+                  competitor dossier is immediately initialized in Cloud
+                  Firestore at 500 baseline ELO. Every match, rating delta, and
+                  medal is persistently saved to your account.
+                </p>
+              </div>
+              <span
+                class="step-badge"
+                style="
+                  background: rgba(14, 165, 233, 0.15);
+                  color: #38bdf8;
+                  border: 1px solid rgba(14, 165, 233, 0.35);
+                "
+              >
+                Cloud Firestore · 500 ELO Floor
+              </span>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-card">
+              <div>
+                <div class="step-header">
+                  <span class="step-num step-num-2">02</span>
+                  <span class="step-icon">⏱️</span>
+                </div>
+                <h3 class="step-title">Factorize Against the Clock</h3>
+                <p class="step-desc">
+                  Tackle 10 questions per match across 10 progressive bounds
+                  from Tier 1 (1–200) to Cosmic Manifold (1–50,000+). Pollard's
+                  Rho evaluates accuracy in milliseconds. Tactically balance
+                  pauses, hints, and the punishing 3-strike rule.
+                </p>
+              </div>
+              <span
+                class="step-badge"
+                style="
+                  background: rgba(245, 158, 11, 0.15);
+                  color: #f59e0b;
+                  border: 1px solid rgba(245, 158, 11, 0.35);
+                "
+              >
+                180s Timers · 3-Strike Penalty
+              </span>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-card">
+              <div>
+                <div class="step-header">
+                  <span class="step-num step-num-3">03</span>
+                  <span class="step-icon">👑</span>
+                </div>
+                <h3 class="step-title">Climb the 12-Tier Olympiad Ladder</h3>
+                <p class="step-desc">
+                  Earn ELO points on every clean solve. Ascend from Composite
+                  Apprentice through Modular Operator to Tier 1 Prime
+                  Singularity (3000+ ELO). Unlock 100+ certifiable Olympiad
+                  medals and build your verified streak ledger.
+                </p>
+              </div>
+              <span
+                class="step-badge"
+                style="
+                  background: rgba(16, 185, 129, 0.15);
+                  color: #34d399;
+                  border: 1px solid rgba(16, 185, 129, 0.35);
+                "
+              >
+                12 ELO Ranks · 100 Accolades
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. THE 6 RANKS OF THE VERDICT (Preserved Intact) -->
+      <section id="sec-verdict" class="home-section">
+        <div class="section-bg-image-wrap">
+          <img
+            class="section-bg-image"
+            src="https://images.pexels.com/photos/2088205/pexels-photo-2088205.jpeg?auto=compress&cs=tinysrgb&w=1200"
+            alt="Geometric structure"
+            loading="lazy"
+          />
+          <div class="section-bg-overlay"></div>
+        </div>
+
+        <div class="content-container">
+          <div class="section-head">
+            <span class="section-kicker">Performance Hierarchy</span>
+            <h2 class="section-title">The 6 Ranks of the Verdict</h2>
+            <p class="section-desc">
+              Competitive outcomes are analyzed across six standardized Math
+              Olympiad tiers based on initial precision, lifeline reliance,
+              overtime recovery, and net session points.
+            </p>
+          </div>
+
+          <div
+            class="ranks-grid"
+            style="
+              grid-template-columns: repeat(
+                auto-fit,
+                minmax(min(100%, 320px), 1fr)
+              );
+            "
+          >
+            <!-- Tier 1: Quantum Decomposer -->
+            <div class="rank-card rank-grandmaster">
+              <div class="rank-card-header">
+                <span
+                  class="rank-badge-tag"
+                  style="
+                    background: rgba(16, 185, 129, 0.2);
+                    color: #10b981;
+                    border: 1px solid rgba(16, 185, 129, 0.4);
+                  "
+                  >Tier 1 · Flawless</span
+                >
+                <span class="text-mint font-mono font-bold"
+                  >10/10 First Try</span
+                >
+              </div>
+              <h3 class="rank-title" style="color: #10b981">
+                Quantum Decomposer
+              </h3>
+              <div class="rank-condition">
+                Condition: Score of 10/10 on the first attempt for all questions
+              </div>
+              <p class="rank-quote">
+                "Absolute mastery. Achieved perfect factorization under the
+                strict initial clock with zero assistance, running at sub-second
+                cognitive speeds."
+              </p>
+            </div>
+
+            <!-- Tier 2: Algorithmic Strategist -->
+            <div class="rank-card rank-master">
+              <div class="rank-card-header">
+                <span
+                  class="rank-badge-tag"
+                  style="
+                    background: rgba(14, 165, 233, 0.2);
+                    color: #38bdf8;
+                    border: 1px solid rgba(14, 165, 233, 0.4);
+                  "
+                  >Tier 2 · Tactical</span
+                >
+                <span class="text-accent font-mono font-bold"
+                  >10/10 Overall</span
+                >
+              </div>
+              <h3 class="rank-title" style="color: #38bdf8">
+                Algorithmic Strategist
+              </h3>
+              <div class="rank-condition">
+                Condition: Total final score of 10/10 solved, but relied on
+                secondary Lifelines, Hints, or overtime loop
+              </div>
+              <p class="rank-quote">
+                "Elite problem solver. Cleared the board by tactically deploying
+                pauses, hints, or navigating the high-pressure second chance
+                overtime loop."
+              </p>
+            </div>
+
+            <!-- Tier 3: Cadence Analyst -->
+            <div class="rank-card rank-recovery">
+              <div class="rank-card-header">
+                <span
+                  class="rank-badge-tag"
+                  style="
+                    background: rgba(245, 158, 11, 0.2);
+                    color: #f59e0b;
+                    border: 1px solid rgba(245, 158, 11, 0.4);
+                  "
+                  >Tier 3 · Cadence</span
+                >
+                <span class="text-amber font-mono font-bold"
+                  >&gt; 75 Points</span
+                >
+              </div>
+              <h3 class="rank-title" style="color: #f59e0b">Cadence Analyst</h3>
+              <div class="rank-condition">
+                Condition: Net session score strictly greater than 75 points
+                (&gt; 75 / 100 points)
+              </div>
+              <p class="rank-quote">
+                "Strong competitor. Demonstrates high mental cadence and
+                calculation accuracy, successfully neutralizing mistakes."
+              </p>
+            </div>
+
+            <!-- Tier 4: Modular Operator -->
+            <div
+              class="rank-card"
+              style="
+                background: var(--card-dark-gradient);
+                border: 1px solid var(--card-dark-border);
+                border-radius: 1rem;
+                padding: 1.5rem;
+              "
+            >
+              <div class="rank-card-header">
+                <span
+                  class="rank-badge-tag"
+                  style="
+                    background: rgba(2, 132, 199, 0.2);
+                    color: #0284c7;
+                    border: 1px solid rgba(2, 132, 199, 0.4);
+                  "
+                  >Tier 4 · Operator</span
+                >
+                <span class="font-mono font-bold" style="color: #0284c7"
+                  >&gt; 45 Points</span
+                >
+              </div>
+              <h3 class="rank-title" style="color: #0284c7">
+                Modular Operator
+              </h3>
+              <div class="rank-condition">
+                Condition: Net session score strictly greater than 45 points
+                (&gt; 45 / 100 points)
+              </div>
+              <p class="rank-quote">
+                "Capable practitioner. Comfortably navigates textbook ranges and
+                standard number fields, actively improving speed."
+              </p>
+            </div>
+
+            <!-- Tier 5: Factor Initiate -->
+            <div
+              class="rank-card"
+              style="
+                background: var(--card-dark-gradient);
+                border: 1px solid var(--card-dark-border);
+                border-radius: 1rem;
+                padding: 1.5rem;
+              "
+            >
+              <div class="rank-card-header">
+                <span
+                  class="rank-badge-tag"
+                  style="
+                    background: rgba(248, 113, 113, 0.2);
+                    color: #f87171;
+                    border: 1px solid rgba(248, 113, 113, 0.4);
+                  "
+                  >Tier 5 · Initiate</span
+                >
+                <span class="font-mono font-bold" style="color: #f87171"
+                  >1 — 45 Points</span
+                >
+              </div>
+              <h3 class="rank-title" style="color: #f87171">Factor Initiate</h3>
+              <div class="rank-condition">
+                Condition: A positive net score anywhere between 1 and 45 points
+                (1 – 45)
+              </div>
+              <p class="rank-quote">
+                "Developing foundation. Actively building basic divisibility
+                intuition and mental heuristics inside the system."
+              </p>
+            </div>
+
+            <!-- Tier 6: Matrix Reset -->
+            <div class="rank-card rank-baseline">
+              <div class="rank-card-header">
+                <span
+                  class="rank-badge-tag"
+                  style="
+                    background: rgba(220, 38, 38, 0.2);
+                    color: #dc2626;
+                    border: 1px solid rgba(220, 38, 38, 0.4);
+                  "
+                  >Tier 6 · Recalibrate</span
+                >
+                <span class="text-crimson font-mono font-bold"
+                  >&le; 0 Marks</span
+                >
+              </div>
+              <h3 class="rank-title" style="color: #dc2626">Matrix Reset</h3>
+              <div class="rank-condition">
+                Condition: Negative net marks (below 0 points)
+              </div>
+              <p class="rank-quote">
+                "Tactical calibration required. Breached basic bounds. The
+                engine recommends reviewing the Edu page's sandbox before
+                relaunching."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. THE 12-TIER COMPETITIVE HIERARCHY MATRIX (Preserved Intact) -->
+      <section
+        id="sec-elo-matrix"
+        style="padding: 2.5rem 1rem; background: #0f172a"
+      >
+        <div style="max-width: 1200px; margin: 0 auto">
+          <div class="section-head">
+            <span class="section-kicker">Competitive Ladder</span>
+            <h2
+              style="
+                font-size: 1.75rem;
+                font-weight: 700;
+                color: #ffffff;
+                margin-bottom: 0.5rem;
+              "
+            >
+              👑 The 12‑Tier Competitive Hierarchy Matrix
+            </h2>
+            <p
+              style="font-size: 0.95rem; color: #94a3b8; margin-bottom: 1.5rem"
+            >
+              Governs automated matchmaking limits, profile standings, and the
+              Asymmetric Tier‑Banning Firewall across all rated contests.
+              Initialized at 500 ELO upon first sign-in.
+            </p>
+          </div>
+
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+              gap: 1rem;
+            "
+          >
+            <!-- Tier 1 -->
+            <div
+              style="
+                background: rgba(236, 72, 153, 0.1);
+                border: 1px solid rgba(236, 72, 153, 0.3);
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <span
+                  style="font-weight: 700; font-size: 0.85rem; color: #ec4899"
+                  >Tier 1 · 3000+ ELO</span
+                >
+                <span style="font-weight: 800; font-size: 1rem; color: #ec4899"
+                  >Prime Singularity</span
+                >
+              </div>
+              <h3
+                style="
+                  color: #ffffff;
+                  font-size: 1.1rem;
+                  margin-bottom: 0.25rem;
+                "
+              >
+                Nebula Pink
+              </h3>
+              <div style="font-size: 0.82rem; color: #cbd5e1">
+                Constraint: Tiers 1–6 locked from Rated play. Strict 95%+
+                Accuracy required.
+              </div>
+              <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem">
+                "Absolute apex. Only Unrated practice allowed below this ceiling
+                to prevent point‑farming."
+              </p>
+            </div>
+
+            <!-- Tier 2 -->
+            <div
+              style="
+                background: rgba(220, 38, 38, 0.1);
+                border: 1px solid rgba(220, 38, 38, 0.3);
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <span
+                  style="font-weight: 700; font-size: 0.85rem; color: #dc2626"
+                  >Tier 2 · 2700–2999 ELO</span
+                >
+                <span style="font-weight: 800; font-size: 1rem; color: #dc2626"
+                  >Riemann Transcendentalist</span
+                >
+              </div>
+              <h3
+                style="
+                  color: #ffffff;
+                  font-size: 1.1rem;
+                  margin-bottom: 0.25rem;
+                "
+              >
+                Crimson Scarlet
+              </h3>
+              <div style="font-size: 0.82rem; color: #cbd5e1">
+                Constraint: Tiers 1–5 locked from Rated play. Matches forced
+                into Unrated simulation.
+              </div>
+              <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem">
+                "Transcendental mastery. Rated play restricted to higher strata
+                only."
+              </p>
+            </div>
+
+            <!-- Tier 3 -->
+            <div
+              style="
+                background: rgba(6, 182, 212, 0.1);
+                border: 1px solid rgba(6, 182, 212, 0.3);
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <span
+                  style="font-weight: 700; font-size: 0.85rem; color: #06b6d4"
+                  >Tier 3 · 2400–2699 ELO</span
+                >
+                <span style="font-weight: 800; font-size: 1rem; color: #06b6d4"
+                  >Canonical Analyst</span
+                >
+              </div>
+              <h3
+                style="
+                  color: #ffffff;
+                  font-size: 1.1rem;
+                  margin-bottom: 0.25rem;
+                "
+              >
+                Electric Cyan
+              </h3>
+              <div style="font-size: 0.82rem; color: #cbd5e1">
+                Condition: High-tier analytical precision, solving advanced
+                problems with minimal lifeline reliance.
+              </div>
+              <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem">
+                "Canonical insight. Mastery of structural decomposition under
+                accelerated timers."
+              </p>
+            </div>
+
+            <!-- Tier 4 -->
+            <div
+              style="
+                background: rgba(139, 92, 246, 0.1);
+                border: 1px solid rgba(139, 92, 246, 0.3);
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <span
+                  style="font-weight: 700; font-size: 0.85rem; color: #8b5cf6"
+                  >Tier 4 · 2200–2399 ELO</span
+                >
+                <span style="font-weight: 800; font-size: 1rem; color: #8b5cf6"
+                  >Gaussian Cryptographer</span
+                >
+              </div>
+              <h3
+                style="
+                  color: #ffffff;
+                  font-size: 1.1rem;
+                  margin-bottom: 0.25rem;
+                "
+              >
+                Vibrant Violet
+              </h3>
+              <div style="font-size: 0.82rem; color: #cbd5e1">
+                Condition: Complex encrypted problem sets requiring layered
+                reasoning and zero-distraction focus.
+              </div>
+              <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem">
+                "Cryptographic resilience. Decodes numerical complexity under
+                pressure."
+              </p>
+            </div>
+
+            <!-- Tier 5 -->
+            <div
+              style="
+                background: rgba(245, 158, 11, 0.1);
+                border: 1px solid rgba(245, 158, 11, 0.3);
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <span
+                  style="font-weight: 700; font-size: 0.85rem; color: #f59e0b"
+                  >Tier 5 · 2000–2199 ELO</span
+                >
+                <span style="font-weight: 800; font-size: 1rem; color: #f59e0b"
+                  >Eulerian Sentinel</span
+                >
+              </div>
+              <h3
+                style="
+                  color: #ffffff;
+                  font-size: 1.1rem;
+                  margin-bottom: 0.25rem;
+                "
+              >
+                Laser Amber
+              </h3>
+              <div style="font-size: 0.82rem; color: #cbd5e1">
+                Condition: High accuracy across mid-high ranges, balancing speed
+                with modular awareness.
+              </div>
+              <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem">
+                "Eulerian precision with disciplined calculation over every
+                numeric pathway."
+              </p>
+            </div>
+
+            <!-- Tier 6 -->
+            <div
+              style="
+                background: rgba(37, 99, 235, 0.1);
+                border: 1px solid rgba(37, 99, 235, 0.3);
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <span
+                  style="font-weight: 700; font-size: 0.85rem; color: #38bdf8"
+                  >Tier 6 · 1800–1999 ELO</span
+                >
+                <span style="font-weight: 800; font-size: 1rem; color: #38bdf8"
+                  >Logarithmic Vector</span
+                >
+              </div>
+              <h3
+                style="
+                  color: #ffffff;
+                  font-size: 1.1rem;
+                  margin-bottom: 0.25rem;
+                "
+              >
+                Cobalt Blue
+              </h3>
+              <div style="font-size: 0.82rem; color: #cbd5e1">
+                Core Trigger: Expectation Deficit Penalties activate if accuracy
+                drops below rating curve.
+              </div>
+              <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem">
+                "Logarithmic curve enforces balance, rewarding steady cognitive
+                cadence."
+              </p>
+            </div>
+
+            <!-- Tier 7 -->
+            <div
+              style="
+                background: rgba(22, 163, 74, 0.1);
+                border: 1px solid rgba(22, 163, 74, 0.3);
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <span
+                  style="font-weight: 700; font-size: 0.85rem; color: #10b981"
+                  >Tier 7 · 1600–1799 ELO</span
+                >
+                <span style="font-weight: 800; font-size: 1rem; color: #10b981"
+                  >Prime Strategist</span
+                >
+              </div>
+              <h3
+                style="
+                  color: #ffffff;
+                  font-size: 1.1rem;
+                  margin-bottom: 0.25rem;
+                "
+              >
+                Deep Jade
+              </h3>
+              <div style="font-size: 0.82rem; color: #cbd5e1">
+                Condition: Tactical foresight, lifeline resource management, and
+                adaptive pacing.
+              </div>
+              <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem">
+                "Strategic depth anchors this tier with calculated risk-taking."
+              </p>
+            </div>
+
+            <!-- Tier 8 -->
+            <div
+              style="
+                background: rgba(132, 204, 22, 0.1);
+                border: 1px solid rgba(132, 204, 22, 0.3);
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <span
+                  style="font-weight: 700; font-size: 0.85rem; color: #84cc16"
+                  >Tier 8 · 1400–1599 ELO</span
+                >
+                <span style="font-weight: 800; font-size: 1rem; color: #84cc16"
+                  >Modular Operator</span
+                >
+              </div>
+              <h3
+                style="
+                  color: #ffffff;
+                  font-size: 1.1rem;
+                  margin-bottom: 0.25rem;
+                "
+              >
+                Mint Green
+              </h3>
+              <div style="font-size: 0.82rem; color: #cbd5e1">
+                Condition: Solves standard bounds with growing fluency and
+                confidence.
+              </div>
+              <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem">
+                "Modular adaptability. Mastering flexible factorization
+                approaches."
+              </p>
+            </div>
+
+            <!-- Tier 9 -->
+            <div
+              style="
+                background: rgba(156, 163, 175, 0.1);
+                border: 1px solid rgba(156, 163, 175, 0.3);
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <span
+                  style="font-weight: 700; font-size: 0.85rem; color: #9ca3af"
+                  >Tier 9 · 1200–1399 ELO</span
+                >
+                <span style="font-weight: 800; font-size: 1rem; color: #9ca3af"
+                  >Radix Scholar</span
+                >
+              </div>
+              <h3
+                style="
+                  color: #ffffff;
+                  font-size: 1.1rem;
+                  margin-bottom: 0.25rem;
+                "
+              >
+                Muted Platinum
+              </h3>
+              <div style="font-size: 0.82rem; color: #cbd5e1">
+                Condition: Foundational mastery of divisibility rules and prime
+                factor heuristics.
+              </div>
+              <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem">
+                "Consolidating theoretical roots while sharpening execution
+                speed."
+              </p>
+            </div>
+
+            <!-- Tier 10 -->
+            <div
+              style="
+                background: rgba(205, 127, 50, 0.1);
+                border: 1px solid rgba(205, 127, 50, 0.3);
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <span
+                  style="font-weight: 700; font-size: 0.85rem; color: #cd7f32"
+                  >Tier 10 · 900–1199 ELO</span
+                >
+                <span style="font-weight: 800; font-size: 1rem; color: #cd7f32"
+                  >Sieve Calibrator</span
+                >
+              </div>
+              <h3
+                style="
+                  color: #ffffff;
+                  font-size: 1.1rem;
+                  margin-bottom: 0.25rem;
+                "
+              >
+                Polished Bronze
+              </h3>
+              <div style="font-size: 0.82rem; color: #cbd5e1">
+                Condition: Refines sieve-based divisibility checks with focus on
+                zero-mistake consistency.
+              </div>
+              <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem">
+                "Stabilizing fundamentals for ascending into higher analytical
+                strata."
+              </p>
+            </div>
+
+            <!-- Tier 11 -->
+            <div
+              style="
+                background: rgba(107, 114, 128, 0.15);
+                border: 1px solid rgba(56, 189, 248, 0.4);
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <span
+                  style="font-weight: 700; font-size: 0.85rem; color: #38bdf8"
+                  >Tier 11 · 500–899 ELO</span
+                >
+                <span style="font-weight: 800; font-size: 1rem; color: #38bdf8"
+                  >Composite Apprentice</span
+                >
+              </div>
+              <h3
+                style="
+                  color: #ffffff;
+                  font-size: 1.1rem;
+                  margin-bottom: 0.25rem;
+                "
+              >
+                Slate Blue · Entry Rank
+              </h3>
+              <div style="font-size: 0.82rem; color: #cbd5e1">
+                Onboarding Baseline: Every new authenticated user begins at 500
+                ELO.
+              </div>
+              <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem">
+                "Apprentice tier. The official launch floor for all newly
+                registered competitors."
+              </p>
+            </div>
+
+            <!-- Tier 12 -->
+            <div
+              style="
+                background: rgba(15, 23, 42, 0.9);
+                border: 1px solid rgba(229, 231, 235, 0.2);
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <span
+                  style="font-weight: 700; font-size: 0.85rem; color: #e5e7eb"
+                  >Tier 12 · 0–499 ELO</span
+                >
+                <span style="font-weight: 800; font-size: 1rem; color: #e5e7eb"
+                  >Foundry Initiate</span
+                >
+              </div>
+              <h3
+                style="
+                  color: #ffffff;
+                  font-size: 1.1rem;
+                  margin-bottom: 0.25rem;
+                "
+              >
+                Chalk White
+              </h3>
+              <div style="font-size: 0.82rem; color: #cbd5e1">
+                Buffer floor for cold losing streaks. Practice mode recommended.
+              </div>
+              <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem">
+                "Foundry tier. Serves as the stabilizing recovery floor."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. THE OFFICIAL 12-POINT SCORING MATRIX (Preserved Intact) -->
+      <section id="sec-contract" class="home-section">
+        <div class="section-bg-image-wrap">
+          <img
+            class="section-bg-image"
+            src="https://images.pexels.com/photos/6238297/pexels-photo-6238297.jpeg?auto=compress&cs=tinysrgb&w=1200"
+            alt="Mathematical equations"
+            loading="lazy"
+          />
+          <div class="section-bg-overlay"></div>
+        </div>
+
+        <div class="content-container">
+          <div class="section-head">
+            <span class="section-kicker">Scoring Protocol</span>
+            <h2 class="section-title">The Official 12-Point Scoring Matrix</h2>
+            <p class="section-desc">
+              A transparent risk-reward engine. Speed and unassisted accuracy
+              maximize marks, while tactical lifelines, retries, and errors
+              carry strictly audited point adjustments.
+            </p>
+          </div>
+
+          <div
+            class="contract-grid"
+            style="
+              grid-template-columns: repeat(
+                auto-fit,
+                minmax(min(100%, 250px), 1fr)
+              );
+            "
+          >
+            <!-- 1. First Attempt Success -->
+            <div class="contract-card">
+              <div class="contract-pts pts-positive">+10</div>
+              <h4 class="contract-label">1. First Attempt Success</h4>
+              <p class="contract-subtext">
+                Clean, unassisted submission on the first pass adds +10 points
+                to net score.
+              </p>
+            </div>
+
+            <!-- 2. Second Chance Overtime Loop Success -->
+            <div class="contract-card">
+              <div class="contract-pts pts-neutral">+5</div>
+              <h4 class="contract-label">2. Second Chance Success</h4>
+              <p class="contract-subtext">
+                Retrying first-attempt errors or skips during the redemption
+                loop adds +5 points.
+              </p>
+            </div>
+
+            <!-- 3. Standard Errors & Skips -->
+            <div class="contract-card">
+              <div class="contract-pts pts-negative">-2 / -5</div>
+              <h4 class="contract-label">3. Standard Errors &amp; Skips</h4>
+              <p class="contract-subtext">
+                -2 points for first-attempt misses; -5 points for second chance
+                overtime misses.
+              </p>
+            </div>
+
+            <!-- 4. Hint-Assisted Submissions -->
+            <div class="contract-card">
+              <div class="contract-pts pts-neutral">+5 / +2 / -5</div>
+              <h4 class="contract-label">4. Hint-Assisted Submissions</h4>
+              <p class="contract-subtext">
+                +5 on 1st attempt solve; +2 on 2nd attempt solve; -5 points for
+                any error or skip with hint active.
+              </p>
+            </div>
+
+            <!-- 5. Timer Pauses -->
+            <div class="contract-card">
+              <div class="contract-pts pts-negative">-2</div>
+              <h4 class="contract-label">5. Tactical Timer Pauses</h4>
+              <p class="contract-subtext">
+                Activating a 5-second countdown halt lifeline deducts -2 points
+                (max 2 per exam).
+              </p>
+            </div>
+
+            <!-- 6. Question Regeneration -->
+            <div class="contract-card">
+              <div class="contract-pts pts-negative">-2</div>
+              <h4 class="contract-label">6. Question Regeneration</h4>
+              <p class="contract-subtext">
+                Rerolling a composite integer deducts -2 points (max 1; strictly
+                locked during overtime).
+              </p>
+            </div>
+
+            <!-- 7. The 3-Strike Penalty -->
+            <div class="contract-card">
+              <div class="contract-pts pts-negative">-10</div>
+              <h4 class="contract-label">7. The 3-Strike Penalty</h4>
+              <p class="contract-subtext">
+                Deducts an additional -10 points for every cumulative triplet
+                (at 3, 6, 9 mistakes/skips).
+              </p>
+            </div>
+
+            <!-- 8. Early Termination -->
+            <div class="contract-card">
+              <div class="contract-pts pts-negative">-5</div>
+              <h4 class="contract-label">8. Early Termination</h4>
+              <p class="contract-subtext">
+                Voluntarily exiting before completion via "End Exam" inflicts an
+                immediate -5 point penalty.
+              </p>
+            </div>
+
+            <!-- 9. Time-Extension Lock -->
+            <div class="contract-card">
+              <div class="contract-pts pts-negative">-3 &amp; -2%</div>
+              <h4 class="contract-label">9. Time-Extension Lock</h4>
+              <p class="contract-subtext">
+                Adds +30s to countdown timer. Maximum 1 usage. Deducts -3 points
+                and dampens ELO by 2%.
+              </p>
+            </div>
+
+            <!-- 10. Noise Elimination Filter -->
+            <div class="contract-card">
+              <div class="contract-pts pts-negative">-4</div>
+              <h4 class="contract-label">10. Noise Elimination Filter</h4>
+              <p class="contract-subtext">
+                Eliminates invalid prime factors under input field. Maximum 2
+                usages, strictly 1 per question.
+              </p>
+            </div>
+
+            <!-- 11. Factor Breakdown Sandbox -->
+            <div class="contract-card">
+              <div class="contract-pts pts-negative">-5</div>
+              <h4 class="contract-label">11. Factor Breakdown Sandbox</h4>
+              <p class="contract-subtext">
+                Spawns 5s structural scratchpad overlay on screen.
+                Self-destructs instantly. Deducts -5 points.
+              </p>
+            </div>
+
+            <!-- 12. Refresh -->
+            <div class="contract-card">
+              <div class="contract-pts pts-negative">-5</div>
+              <h4 class="contract-label">12. Refresh</h4>
+              <p class="contract-subtext">
+                Restarts the live exam. Costs -5 ELO. Applies a -5 to -20 marks
+                deficit. Usable once per contest.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. THE INSTANT RANDOMIZER (Preserved Intact) -->
+      <section id="sec-randomizer" class="home-section">
+        <div class="section-bg-image-wrap">
+          <img
+            class="section-bg-image"
+            src="https://images.pexels.com/photos/2832382/pexels-photo-2832382.jpeg?auto=compress&cs=tinysrgb&w=1200"
+            alt="Light streak dynamics"
+            loading="lazy"
+          />
+          <div class="section-bg-overlay"></div>
+        </div>
+
+        <div class="content-container">
+          <div class="section-head">
+            <span class="section-kicker">Dynamic Deployment</span>
+            <h2 class="section-title">The Instant Randomizer</h2>
+            <p class="section-desc">
+              Bypass decision fatigue. Click the randomized terminal to engage a
+              GSAP slot-machine roll and immediately launch an arena.
+            </p>
+          </div>
+
+          <div id="randomizer-trigger-card" class="randomizer-card">
+            <span class="section-kicker" style="color: #000000"
+              >Click to Trigger Random Deployment</span
+            >
+            <div class="randomizer-slot-box">
+              <span id="slot-machine-target" class="slot-machine-text"
+                >ROLL ARENA</span
+              >
+            </div>
+            <p style="font-size: 0.95rem; opacity: 0.9">
+              Pulls randomly across all 9 competition tiers and applies global
+              session rules automatically.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. THE RANGE PORTAL (Preserved Intact) -->
+      <section id="sec-ranges" class="home-section">
+        <div class="section-bg-image-wrap">
+          <img
+            class="section-bg-image"
+            src="https://images.pexels.com/photos/1036808/pexels-photo-1036808.jpeg?auto=compress&cs=tinysrgb&w=1200"
+            alt="Modern stairs tiers"
+            loading="lazy"
+          />
+          <div class="section-bg-overlay"></div>
+        </div>
+
+        <div class="content-container">
+          <div class="section-head">
+            <span class="section-kicker">Curated Bounds</span>
+            <h2 class="section-title">The Range Portal</h2>
+            <p class="section-desc">
+              Quickly browse and access the standard competition tiers from
+              micro foundations to 50,000+ prime manifolds.
+            </p>
+          </div>
+
+          <div class="auto-fit-grid-240">
+            <a
+              href="./exam.html?min=1&max=200&title=Tier%201%3A%201%20-%20200"
+              class="range-tilt-card"
+            >
+              <div class="range-card-body">
+                <div class="range-tier-label">Tier 1</div>
+                <div class="range-bounds-text">1 — 200</div>
+                <p class="range-desc-text">Mental Foundation</p>
+              </div>
+              <div class="range-card-footer">
+                <span class="font-bold">Launch Division</span>
+                <span>→</span>
+              </div>
+            </a>
+
+            <a
+              href="./exam.html?min=201&max=500&title=Tier%202%3A%20201%20-%20500"
+              class="range-tilt-card"
+            >
+              <div class="range-card-body">
+                <div class="range-tier-label">Tier 2</div>
+                <div class="range-bounds-text">201 — 500</div>
+                <p class="range-desc-text">Intermediate Cadence</p>
+              </div>
+              <div class="range-card-footer">
+                <span class="font-bold">Launch Division</span>
+                <span>→</span>
+              </div>
+            </a>
+
+            <a
+              href="./exam.html?min=501&max=1000&title=Tier%203%3A%20501%20-%201%2C000"
+              class="range-tilt-card"
+            >
+              <div class="range-card-body">
+                <div class="range-tier-label">Tier 3</div>
+                <div class="range-bounds-text">501 — 1,000</div>
+                <p class="range-desc-text">Olympiad Baseline</p>
+              </div>
+              <div class="range-card-footer">
+                <span class="font-bold">Launch Division</span>
+                <span>→</span>
+              </div>
+            </a>
+
+            <a
+              href="./exam.html?min=1001&max=2000&title=Tier%204%3A%201%2C001%20-%202%2C000"
+              class="range-tilt-card"
+            >
+              <div class="range-card-body">
+                <div class="range-tier-label">Tier 4</div>
+                <div class="range-bounds-text">1,001 — 2,000</div>
+                <p class="range-desc-text">Advanced Decomposition</p>
+              </div>
+              <div class="range-card-footer">
+                <span class="font-bold">Launch Division</span>
+                <span>→</span>
+              </div>
+            </a>
+
+            <a
+              href="./exam.html?min=2001&max=5000&title=Tier%205%3A%202%2C001%20-%205%2C000"
+              class="range-tilt-card"
+            >
+              <div class="range-card-body">
+                <div class="range-tier-label">Tier 5</div>
+                <div class="range-bounds-text">2,001 — 5,000</div>
+                <p class="range-desc-text">Master Division</p>
+              </div>
+              <div class="range-card-footer">
+                <span class="font-bold">Launch Division</span>
+                <span>→</span>
+              </div>
+            </a>
+
+            <a href="./ranges.html" class="range-tilt-card">
+              <div class="range-card-body" style="text-align: center">
+                <div class="range-tier-label" style="color: #0284c7">
+                  Complete Matrix
+                </div>
+                <div
+                  class="range-bounds-text"
+                  style="font-size: 1.5rem; color: #ffffff"
+                >
+                  All 10 Tiers
+                </div>
+                <p class="range-desc-text">
+                  Browse from Tier 1 up to Omega 50,000+
+                </p>
+              </div>
+              <div class="range-card-footer">
+                <span class="font-bold" style="color: #0284c7"
+                  >Open Full Matrix</span
+                >
+                <span style="color: #0284c7">→</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. CLOUD PROFILE & SETTINGS (Renamed from Local Settings Node - Item 5) -->
+      <section id="sec-settings" class="home-section">
+        <div class="section-bg-image-wrap">
+          <img
+            class="section-bg-image"
+            src="https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=1200"
+            alt="Clean settings dashboard"
+            loading="lazy"
+          />
+          <div class="section-bg-overlay"></div>
+        </div>
+
+        <div class="content-container">
+          <div class="section-head">
+            <span class="section-kicker">Competitor Customization</span>
+            <h2 class="section-title">Cloud Profile &amp; Settings</h2>
+            <p class="section-desc">
+              Directly configure session rules, tactical lifeline permissions,
+              and audio feedback. Authenticated settings are automatically
+              synchronized with Cloud Firestore.
+            </p>
+          </div>
+
+          <div
+            style="
+              background: rgba(30, 41, 59, 0.85);
+              border: 1px solid rgba(255, 255, 255, 0.08);
+              border-radius: 16px;
+              padding: 2rem;
+              max-width: 900px;
+              margin: 0 auto;
+            "
+          >
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 1.5rem;
+                margin-bottom: 2rem;
+              "
+            >
+              <!-- Toggle 1: Sound -->
+              <label
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  background: rgba(15, 23, 42, 0.6);
+                  padding: 1rem;
+                  border-radius: 10px;
+                  cursor: pointer;
+                "
+              >
+                <div>
+                  <div
+                    style="font-weight: 700; color: #ffffff; font-size: 0.95rem"
+                  >
+                    Synthesizer Audio
+                  </div>
+                  <div style="font-size: 0.8rem; color: #94a3b8">
+                    Mechanical ticks &amp; chimes
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  id="local-toggle-audio"
+                  style="width: 1.25rem; height: 1.25rem; accent-color: #38bdf8"
+                />
+              </label>
+
+              <!-- Toggle 2: Second Attempt -->
+              <label
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  background: rgba(15, 23, 42, 0.6);
+                  padding: 1rem;
+                  border-radius: 10px;
+                  cursor: pointer;
+                "
+              >
+                <div>
+                  <div
+                    style="font-weight: 700; color: #ffffff; font-size: 0.95rem"
+                  >
+                    Second Chance Overtime
+                  </div>
+                  <div style="font-size: 0.8rem; color: #94a3b8">
+                    Redemption retry loop
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  id="local-toggle-second-attempt"
+                  style="width: 1.25rem; height: 1.25rem; accent-color: #38bdf8"
+                />
+              </label>
+
+              <!-- Toggle 3: Pauses -->
+              <label
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  background: rgba(15, 23, 42, 0.6);
+                  padding: 1rem;
+                  border-radius: 10px;
+                  cursor: pointer;
+                "
+              >
+                <div>
+                  <div
+                    style="font-weight: 700; color: #ffffff; font-size: 0.95rem"
+                  >
+                    Timer Pauses
+                  </div>
+                  <div style="font-size: 0.8rem; color: #94a3b8">
+                    5s tactical freeze (-2 pts)
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  id="local-toggle-pauses"
+                  style="width: 1.25rem; height: 1.25rem; accent-color: #38bdf8"
+                />
+              </label>
+
+              <!-- Toggle 4: Hints -->
+              <label
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  background: rgba(15, 23, 42, 0.6);
+                  padding: 1rem;
+                  border-radius: 10px;
+                  cursor: pointer;
+                "
+              >
+                <div>
+                  <div
+                    style="font-weight: 700; color: #ffffff; font-size: 0.95rem"
+                  >
+                    Conceptual Hints
+                  </div>
+                  <div style="font-size: 0.8rem; color: #94a3b8">
+                    Smallest factor guidance
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  id="local-toggle-hints"
+                  style="width: 1.25rem; height: 1.25rem; accent-color: #38bdf8"
+                />
+              </label>
+            </div>
+
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 1rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+                padding-top: 1.5rem;
+              "
+            >
+              <span style="font-size: 0.88rem; color: #94a3b8">
+                Looking to edit your competitor handle, real name, and
+                organization?
+              </span>
+              <a
+                href="./profile-settings.html"
+                class="btn-primary"
+                style="
+                  background: linear-gradient(135deg, #0284c7, #0ea5e9);
+                  font-size: 0.92rem;
+                  padding: 0.6rem 1.4rem;
+                "
+              >
+                <span>Open Cloud Settings &amp; Dossier →</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10. DYNAMIC PERSONAL LEDGER (Firebase Powered - Item 5) -->
+      <section id="sec-ledger" class="home-section">
+        <div class="section-bg-image-wrap">
+          <img
+            class="section-bg-image"
+            src="https://images.pexels.com/photos/669615/pexels-photo-669615.jpeg?auto=compress&cs=tinysrgb&w=1200"
+            alt="Analytics ledger graph"
+            loading="lazy"
+          />
+          <div class="section-bg-overlay"></div>
+        </div>
+
+        <div class="content-container">
+          <div class="section-head">
+            <span class="section-kicker">Live Telemetry</span>
+            <h2 class="section-title">Personal Record &amp; Streaks</h2>
+            <p class="section-desc">
+              Your competitive telemetry verified and persisted directly in
+              Cloud Firestore. Zero local data loss on device reboots.
+            </p>
+          </div>
+
+          <div class="cloud-ledger-card">
+            <!-- User Profile Ribbon (Visible When Logged In) -->
+            <div
+              id="ledger-user-banner"
+              class="ledger-user-banner"
+              style="display: none"
+              hidden
+            >
+              <div class="ledger-user-info">
+                <img
+                  id="ledger-user-avatar"
+                  class="ledger-avatar"
+                  src=""
+                  alt="User Avatar"
+                  style="display: none"
+                />
+                <div
+                  id="ledger-user-avatar-fallback"
+                  class="ledger-avatar-fallback"
+                  style="display: none"
+                >
+                  C
+                </div>
+                <div>
+                  <div id="ledger-user-name" class="ledger-user-name">
+                    Authenticated Competitor
+                  </div>
+                  <div class="ledger-user-sub">
+                    <span
+                      id="ledger-user-tier"
+                      style="color: #38bdf8; font-weight: 700"
+                      >Composite Apprentice</span
+                    >
+                    <span style="margin: 0 0.4rem; color: #64748b">•</span>
+                    <span
+                      id="ledger-user-elo"
+                      style="color: #10b981; font-weight: 700"
+                      >500 ELO</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="ledger-cloud-sync-tag">
+                <span>●</span> Cloud Firestore Synced
+              </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="ledger-grid">
+              <div class="ledger-box">
+                <h5>Exams Completed</h5>
+                <div id="ledger-exams-count" class="ledger-val tabular-nums">
+                  —
+                </div>
+                <span
+                  class="text-muted"
+                  style="font-size: 0.8rem; color: #ffffff"
+                  >Question Sessions</span
+                >
+              </div>
+
+              <div class="ledger-box">
+                <h5>All-Time High Score</h5>
+                <div id="ledger-high-score" class="ledger-val tabular-nums">
+                  —
+                </div>
+                <span
+                  class="text-muted"
+                  style="font-size: 0.8rem; color: #ffffff"
+                  >Peak Exam Point Record</span
+                >
+              </div>
+
+              <div class="ledger-box">
+                <h5>Best Win Streak</h5>
+                <div id="ledger-best-streak" class="ledger-val tabular-nums">
+                  —
+                </div>
+                <span
+                  class="text-muted"
+                  style="font-size: 0.8rem; color: #ffffff"
+                  >Consecutive Clean Solves</span
+                >
+              </div>
+
+              <div class="ledger-box">
+                <h5>Decomposition Accuracy</h5>
+                <div id="ledger-accuracy-rate" class="ledger-val tabular-nums">
+                  —
+                </div>
+                <div class="progress-bar-container">
+                  <div
+                    id="ledger-accuracy-bar"
+                    class="progress-bar-fill"
+                    style="width: 0%"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sleek Guest Lock Overlay (Hidden until waitForAuthReady confirms guest state) -->
+            <div
+              id="ledger-guest-lock-overlay"
+              class="ledger-guest-lock-overlay"
+              style="display: none"
+              hidden
+            >
+              <div style="font-size: 2.25rem; margin-bottom: 0.75rem">🔒</div>
+              <h3 class="ledger-guest-lock-title">
+                Sign In to Unlock Live Stats
+              </h3>
+              <p class="ledger-guest-lock-desc">
+                You are currently browsing as an unauthenticated guest. Sign in
+                with Google to establish your official 500 baseline ELO, record
+                win streaks, and save match history to Cloud Firestore.
+              </p>
+              <button
+                type="button"
+                id="ledger-overlay-signin-btn"
+                class="hero-btn-primary"
+                style="
+                  padding: 0.75rem 1.6rem;
+                  font-size: 0.95rem;
+                  cursor: pointer;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    fill="#4285F4"
+                  />
+                  <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853"
+                  />
+                  <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                    fill="#FBBC05"
+                  />
+                  <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                    fill="#EA4335"
+                  />
+                </svg>
+                <span>Sign In with Google</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11. PRIME PLAYGROUND (Live Pollard's Rho - Preserved Intact) -->
+      <section id="playground-section" class="home-section">
+        <div class="section-bg-image-wrap">
+          <img
+            class="section-bg-image"
+            src="https://images.pexels.com/photos/714698/pexels-photo-714698.jpeg?auto=compress&cs=tinysrgb&w=1200"
+            alt="Geometric prism reflection"
+            loading="lazy"
+          />
+          <div class="section-bg-overlay"></div>
+        </div>
+
+        <div class="content-container">
+          <div class="section-head">
+            <span class="section-kicker">Interactive Sandbox</span>
+            <h2 class="section-title">Prime Playground</h2>
+            <p class="section-desc">
+              Type any integer. The browser executes Pollard's Rho algorithm
+              with Brent's cycle detection in milliseconds.
+            </p>
+          </div>
+
+          <div class="playground-container">
+            <div class="playground-input-group">
+              <input
+                id="playground-integer-input"
+                class="playground-input"
+                type="number"
+                value="1260"
+                min="2"
+                max="10000000"
+                placeholder="Enter any integer (e.g. 1260, 4920, 84357)"
+                aria-label="Integer for Pollard's Rho factorization"
+              />
+            </div>
+
+            <div class="factorization-output-deck">
+              <div id="playground-formula-output" class="factor-formula">
+                1260 = 2² × 3² × 5 × 7
+              </div>
+              <div
+                id="playground-bubbles-wrap"
+                class="factor-bubbles-wrap"
+              ></div>
+              <div id="playground-verdict-tag" class="prime-verdict-tag">
+                Pollard's Rho factorization ready
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12. OLYMPIAD STRATEGY BLUEPRINT (Preserved Intact) -->
+      <section id="sec-strategy" class="home-section">
+        <div class="section-bg-image-wrap">
+          <img
+            class="section-bg-image"
+            src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=1200"
+            alt="Mathematical strategy blueprint"
+            loading="lazy"
+          />
+          <div class="section-bg-overlay"></div>
+        </div>
+
+        <div class="content-container">
+          <div class="section-head">
+            <span class="section-kicker">Number Theory</span>
+            <h2 class="section-title">Olympiad Strategy Blueprint</h2>
+            <p class="section-desc">
+              Essential cognitive shortcuts used by national Math Olympiad
+              champions to factor large composites in seconds.
+            </p>
+          </div>
+
+          <div class="auto-fit-grid-300">
+            <div class="strategy-card">
+              <div class="edu-subcard-tag">Strategy 01</div>
+              <h4>Parity &amp; Modulo 5 Isolation</h4>
+              <p>
+                Always strip all factors of
+                <span class="font-math font-bold">2</span> and
+                <span class="font-math font-bold">5</span> immediately by
+                inspecting the last digit. Repeated division reduces composite
+                magnitude exponentially.
+              </p>
+            </div>
+
+            <div class="strategy-card">
+              <div class="edu-subcard-tag">Strategy 02</div>
+              <h4>Sum of Digits &amp; Modulo 9</h4>
+              <p>
+                Compute the digital sum: if the sum of digits is a multiple of
+                9, the number is divisible by
+                <span class="font-math font-bold">3² = 9</span>. If divisible by
+                3, extract 3 and evaluate the quotient immediately.
+              </p>
+            </div>
+
+            <div class="strategy-card">
+              <div class="edu-subcard-tag">Strategy 03</div>
+              <h4>Difference of Squares: a² - b²</h4>
+              <p>
+                For odd composites, check if
+                <span class="font-math font-bold">N + b² = a²</span>. For
+                example,
+                <span class="font-math font-bold"
+                  >899 = 900 - 1 = 30² - 1² = 29 × 31</span
+                >. Many Olympiad problems disguise factors via nearby perfect
+                squares.
+              </p>
+            </div>
+
+            <div class="strategy-card">
+              <div class="edu-subcard-tag">Strategy 04</div>
+              <h4>Alternating Digit Sum (Mod 11)</h4>
+              <p>
+                Calculate alternating sum of digits:
+                <span class="font-math font-bold">d₀ - d₁ + d₂ - d₃...</span>.
+                If the result is a multiple of 11 (including 0), 11 divides the
+                integer cleanly without remainder.
+              </p>
+            </div>
+
+            <div class="strategy-card">
+              <div class="edu-subcard-tag">Strategy 05</div>
+              <h4>Truncation &amp; Factor 7 / 13</h4>
+              <p>
+                For 7: Double the last digit and subtract from the rest (<span
+                  class="font-math font-bold"
+                  >Rest - 2×Last</span
+                >). For 13: Multiply last digit by 4 and add to the rest (<span
+                  class="font-math font-bold"
+                  >Rest + 4×Last</span
+                >).
+              </p>
+            </div>
+
+            <div class="strategy-card">
+              <div class="edu-subcard-tag">Strategy 06</div>
+              <h4>Pollard's Polynomial Intuition</h4>
+              <p>
+                When human mental bounds are exceeded, computer engines use
+                <span class="font-math font-bold">f(x) = (x² + 1) mod n</span>.
+                The birthday paradox guarantees cycle collisions in
+                <span class="font-math font-bold">O(p^0.5)</span> steps.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13. ELITE ANNOUNCEMENT: VERSION 4.0 EVOLUTION (Moved down - Item 2) -->
+      <section
+        id="sec-v4-announcement"
+        class="v3-triumph-stage"
+        style="margin-top: 2rem; margin-bottom: 2rem"
+      >
+        <div class="v3-glass-shield"></div>
+        <div class="v3-grid-overlay"></div>
+
+        <div class="v3-triumph-core">
+          <div class="v3-status-cluster">
+            <span class="v3-pulse-node active"></span>
+            <span class="v3-status-label"
+              >CURRENT FIELD: CLOUD PROTOCOL V3.4</span
+            >
+          </div>
+
+          <h2 class="v3-triumph-headline">THE EVOLUTION IS UNLEASHED</h2>
+
+          <p class="v3-triumph-subtext">
+            The architectural staging for
+            <span class="v3-glow-version">Version 4.0</span> is actively
+            underway. With full Firebase Authentication and Cloud Firestore now
+            live, the platform is preparing global leaderboards, asynchronous
+            peer challenges, and ultra-high-velocity competition brackets.
+          </p>
+
+          <div class="v3-badge-tether">
+            <div class="v3-tether-pill v3-pill-blue">
+              <span class="v3-pill-icon">⚡</span> SPEED TRAINING
+            </div>
+            <div class="v3-tether-pill v3-pill-cyan">
+              <span class="v3-pill-icon">🏆</span> CLOUD ELO (500 FLOOR)
+            </div>
+            <div class="v3-tether-pill v3-pill-cyan">
+              <span class="v3-pill-icon">⏱️</span> INSTANT VERIFICATION
+            </div>
+            <div class="v3-tether-pill v3-pill-cyan">
+              <span class="v3-pill-icon">🔒</span> FIRESTORE RULES
+            </div>
+            <div class="v3-tether-pill v3-pill-cyan">
+              <span class="v3-pill-icon">🧠</span> ALGORITHMIC PRECISION
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 14. PLATFORM AUTHENTICITY & CLOUD INTEGRITY (Preserved Intact) -->
+      <section id="sec-authenticity" class="home-section">
+        <div class="section-bg-image-wrap">
+          <img
+            class="section-bg-image"
+            src="https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=1200"
+            alt="Serverless circuit technology"
+            loading="lazy"
+          />
+          <div class="section-bg-overlay"></div>
+        </div>
+
+        <div class="content-container">
+          <div class="section-head">
+            <span class="section-kicker">System Architecture</span>
+            <h2 class="section-title">Platform Authenticity &amp; Integrity</h2>
+            <p class="section-desc">
+              Engineered to run with pure client-side mathematical speed,
+              powered by Google Firebase Authentication and hardened Cloud
+              Firestore document isolation.
+            </p>
+          </div>
+
+          <div class="settings-node-card">
+            <div class="auto-fit-grid-240" style="gap: 1rem">
+              <div class="counter-box">
+                <div class="cb-label">Runtime Framework</div>
+                <div
+                  style="
+                    font-family: var(--font-heading);
+                    font-size: 1.15rem;
+                    font-weight: 700;
+                    color: var(--accent-primary);
+                  "
+                >
+                  Vanilla Browser ESM
+                </div>
+              </div>
+              <div class="counter-box">
+                <div class="cb-label">Integer Algorithm</div>
+                <div
+                  style="
+                    font-family: var(--font-heading);
+                    font-size: 1.15rem;
+                    font-weight: 700;
+                    color: var(--accent-primary);
+                  "
+                >
+                  Pollard's Rho + Miller-Rabin
+                </div>
+              </div>
+              <div class="counter-box">
+                <div class="cb-label">Cloud Persistence</div>
+                <div
+                  style="
+                    font-family: var(--font-heading);
+                    font-size: 1.15rem;
+                    font-weight: 700;
+                    color: var(--accent-primary);
+                  "
+                >
+                  Cloud Firestore + Auth
+                </div>
+              </div>
+              <div class="counter-box">
+                <div class="cb-label">Audio Engine</div>
+                <div
+                  style="
+                    font-family: var(--font-heading);
+                    font-size: 1.15rem;
+                    font-weight: 700;
+                    color: var(--accent-primary);
+                  "
+                >
+                  Native Web Audio API
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 15. THE ULTIMATE GATEWAY (Preserved Intact) -->
+      <section
+        id="sec-gateway"
+        class="home-section"
+        style="border-bottom: none"
+      >
+        <div class="section-bg-image-wrap">
+          <img
+            class="section-bg-image"
+            src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1200"
+            alt="Podium gateway finish"
+            loading="lazy"
+          />
+          <div class="section-bg-overlay"></div>
+        </div>
+
+        <div class="content-container">
+          <div
+            class="randomizer-card"
+            style="background: var(--gradient-brand)"
+          >
+            <h2
+              style="
+                font-size: clamp(2rem, 4vw, 2.75rem);
+                margin-bottom: 0.75rem;
+                color: #ffffff;
+              "
+            >
+              Ready for the Competitive Exam?
+            </h2>
+            <p style="font-size: 1.05rem; opacity: 0.9; margin-bottom: 1.5rem">
+              Test your prime factorization cognitive speed under the strict
+              180-second clock with live 3-strike rules and redemption tracking.
+            </p>
+            <a
+              href="./ranges.html"
+              class="btn-primary"
+              style="background: #ffffff; color: #0f172a"
+            >
+              <span>Select Your Competition Tier</span>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Persistent Baseline Footer Matrix -->
+    <div id="site-footer-slot">
+      <footer class="site-footer">
+        <div class="footer-container">
+          <p class="footer-line highlight">© Olympiad Edge</p>
+          <p class="footer-line footer-author">Authorized By Rayaan Tasnim</p>
+          <p class="footer-line footer-line-muted">PrimeFactor.app v3.4 · All rights reserved</p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Page Module Logic -->
+    <script type="module">
+      import { initGlobalHeader, renderFooter } from './js/header.js';
+      import {
+        waitForAuthReady,
+        onAuthChange,
+        getCurrentUser,
+        getCurrentProfile
+      } from './js/firebase.js';
+      import { initHomeStaticModules, syncHomeAuthUI } from './js/home.js';
+
+      async function bootstrapHome() {
+        if (window.__pfHomeBootstrapped) return;
+        window.__pfHomeBootstrapped = true;
+
+        initGlobalHeader();
+        renderFooter();
+        initHomeStaticModules();
+
+        // Wait for Firebase Auth to finalize before deciding Guest overlay vs Logged-in dashboard
+        const initialAuth = await waitForAuthReady();
+        syncHomeAuthUI(initialAuth);
+
+        // Keep Hero CTA, Cloud Ledger, and Settings synchronized on subsequent logins/logouts
+        onAuthChange((authState) => {
+          syncHomeAuthUI(authState);
+        });
+
+        if (!window.__pfHomeAuthEventsBound) {
+          window.__pfHomeAuthEventsBound = true;
+          window.addEventListener('primefactor_auth_changed', (e) => {
+            syncHomeAuthUI(e.detail);
+          });
+          window.addEventListener('primefactor_profile_updated', (e) => {
+            syncHomeAuthUI({
+              user: getCurrentUser(),
+              profile: e.detail?.profile ?? getCurrentProfile()
+            });
+          });
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootstrapHome);
+      } else {
+        bootstrapHome();
+      }
+    </script>
+    <script type="module" src="./js/hero-fx.js"></script>
+  </body>
+</html>

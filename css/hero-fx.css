@@ -1,0 +1,111 @@
+/* PrimeFactor.app — hero WebGL layer, motion helpers (see js/hero-fx.js) */
+
+#hero-webgl {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+  pointer-events: none;
+}
+.hero-gateway .section-bg-overlay { z-index: 2; }
+
+/* the stock photo is only a poster/fallback once WebGL is running */
+html.hero-fx-on .hero-gateway .section-bg-image { opacity: 0.12 !important; }
+html.hero-fx-on .hero-gateway .section-bg-overlay {
+  background: radial-gradient(ellipse at 30% 40%, rgba(2, 6, 23, 0.55) 0%, rgba(2, 6, 23, 0.15) 70%) !important;
+}
+.hero-gateway .hero-content { position: relative; z-index: 3; }
+
+/* avoid a flash of final content before the GSAP intro takes over */
+html.fx-pending .hero-badge-meta,
+html.fx-pending .hero-title,
+html.fx-pending .hero-subtitle,
+html.fx-pending .hero-actions > *,
+html.fx-pending .hero-gateway .mini-challenge-card,
+html.fx-pending .hero-scroll-cue { opacity: 0 !important; }
+
+.hero-title .fx-word { display: inline-block; will-change: transform; }
+.hero-title .highlight { display: inline-block; }
+.hero-title { perspective: 800px; text-shadow: 0 6px 40px rgba(2, 6, 23, 0.55); }
+
+/* magnetic buttons compose via the individual `translate` property (GSAP/Motion use `transform`) */
+.hero-btn-primary, .hero-btn-secondary { translate: var(--mx, 0px) var(--my, 0px); }
+
+.hero-scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 0.9rem;
+  transform: translateX(-50%);
+  z-index: 3;
+  width: 22px;
+  height: 36px;
+  border: 1.5px solid rgba(148, 163, 184, 0.55);
+  border-radius: 14px;
+  pointer-events: none;
+}
+.hero-scroll-cue::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 7px;
+  width: 3px;
+  height: 7px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: #38bdf8;
+  animation: fx-cue 1.8s ease-in-out infinite;
+}
+@keyframes fx-cue {
+  0% { opacity: 0; transform: translateY(0); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(12px); }
+}
+
+/* Motion drives card transforms: keep CSS transitions off transform so frames don't lag */
+html.fx-motion .step-card,
+html.fx-motion .rank-card,
+html.fx-motion .mini-challenge-card {
+  transition-property: box-shadow, border-color, background, color !important;
+}
+html.fx-motion .step-card:hover,
+html.fx-motion .rank-card:hover { transform: none !important; }
+
+#fx-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 10000;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, #0ea5e9, #818cf8 55%, #34d399);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .hero-scroll-cue { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-cue::after { animation: none; }
+  html.fx-pending .hero-badge-meta,
+  html.fx-pending .hero-title,
+  html.fx-pending .hero-subtitle,
+  html.fx-pending .hero-actions > *,
+  html.fx-pending .hero-gateway .mini-challenge-card,
+  html.fx-pending .hero-scroll-cue { opacity: 1 !important; }
+}
+
+/* soft scrim behind the copy: guarantees contrast whatever the shader is doing */
+.hero-gateway .hero-content::before {
+  content: '';
+  position: absolute;
+  inset: -2.5rem -1.5rem;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 42%, rgba(3, 8, 20, 0.7) 0%, rgba(3, 8, 20, 0.45) 45%, rgba(3, 8, 20, 0) 75%);
+}
+.hero-gateway .hero-subtitle { color: #b6c3d6 !important; }
