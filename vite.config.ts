@@ -5,7 +5,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: './',
+    base: '/Prime-Factorization-Web/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
